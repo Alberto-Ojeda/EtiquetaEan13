@@ -1,0 +1,3 @@
+# generacionEtiquetasCinlat
+# generacionEtiquetasCinlat
+# EtiquetaEan13
