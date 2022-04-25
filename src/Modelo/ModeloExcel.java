@@ -31,6 +31,7 @@ Vista vistaE= new Vista();
                row.createCell(1).setCellValue("DESCRIPCION");
                row.createCell(2).setCellValue("UPS");
                row.createCell(3).setCellValue("SELECTOR");
+               row.createCell(4).setCellValue("PIEZAS");
                Iterator filaIterator = hoja.rowIterator();
                
                

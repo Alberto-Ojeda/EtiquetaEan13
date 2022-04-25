@@ -68,6 +68,14 @@ public class ControladorExcel implements ActionListener {
             this.vistaE.jTable1.setValueAt(true, i, 3);
         }
     }
+    public void addCheckPiezas(int column, JTable table) {
+        TableColumn tc = table.getColumnModel().getColumn(column);
+        tc.setCellEditor(table.getDefaultEditor(String.class));
+        tc.setCellRenderer(table.getDefaultRenderer(String.class));
+        for (int i = 0; i < vistaE.jTable1.getRowCount(); i++) {
+            this.vistaE.jTable1.setValueAt(1, i, 4);
+        }
+    }
 
     public void accederDatosFilacopia5x5() throws DocumentException, FileNotFoundException, IOException, PrinterException {
         this.vistaE = vistaE;
@@ -364,7 +372,7 @@ public class ControladorExcel implements ActionListener {
         rec.setBorderWidthRight(2);
         rec.setBorderWidthTop(4);
 
-        String sku, descripcion, ups,desa;
+        String sku, descripcion, ups,desa, piezas1;
 
         columna = (boolean) this.vistaE.jTable1.getValueAt(0, 3);
         sku = String.valueOf(this.vistaE.jTable1.getValueAt(i, 0));
@@ -380,9 +388,9 @@ public class ControladorExcel implements ActionListener {
         doc.setMargins(4, 4, 12, 4);
         doc.setMarginMirroring(columna);
         doc.open();
-         Barcode128 code = new Barcode128();
+         BarcodeEAN code = new BarcodeEAN();
         code.setCode(ups);
-
+        code.setCodeType(Barcode.EAN13);
         Image img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
         img.scaleToFit(100, 70);
         Paragraph parrafo = new Paragraph();
@@ -427,7 +435,7 @@ public class ControladorExcel implements ActionListener {
             columna = (boolean) this.vistaE.jTable1.getValueAt(i, 3);
             if (columna == true) {
                 sku = String.valueOf(this.vistaE.jTable1.getValueAt(i, 0));
-
+                piezas1= String.valueOf(this.vistaE.jTable1.getValueAt(i, 4));
                 if (sku.length()>9 ) {
                 sku= sku.substring(0,9);
                 
@@ -435,7 +443,7 @@ public class ControladorExcel implements ActionListener {
                 ups = String.valueOf(this.vistaE.jTable1.getValueAt(i, 2));
  
                 code.setCode(ups);
-                
+                code.setCodeType(Barcode.EAN13);
                 img = code.createImageWithBarcode(pdf.getDirectContent(), BaseColor.BLACK, BaseColor.BLACK);
                 img.scaleToFit(150, 120);
                 img.setAlignment(img.ALIGN_CENTER);
@@ -450,7 +458,7 @@ public class ControladorExcel implements ActionListener {
 
 
                 sku_.add("SKU:" + " " + sku+"\n"+"____________________");
-                piezas.add("1PZ"+"\n"+"Cantidad de producto");
+                piezas.add(piezas1+" "+"PZ"+"\n"+"Cantidad de producto");
                 for (int j = 0; j < descripcion.length(); j++) {
                 desa=String.valueOf(descripcion2[j]);
                 parrafo.add(desa);                    
@@ -523,6 +531,7 @@ public class ControladorExcel implements ActionListener {
                             modeloE.Importar(archivo, vistaE.jTable1) + "\n Formato ." + archivo.getName().substring(archivo.getName().lastIndexOf(".") + 1),
                             "IMPORTAR EXCEL", JOptionPane.INFORMATION_MESSAGE);
                     addCheckBox(3, this.vistaE.jTable1);
+                    addCheckPiezas(4, this.vistaE.jTable1);
                 } else {
                     JOptionPane.showMessageDialog(null, "Elija un formato valido.");
                 }
